@@ -9,7 +9,7 @@ export default function SinglePost() {
   const location = useLocation();
   const path = location.pathname.split("/")[2];
   const [post, setPost] = useState({});
-  const PF = "http://localhost:8000/images/";
+  const PF = "http://localhost:5000/images/";
   const { user } = useContext(Context);
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
@@ -26,27 +26,23 @@ export default function SinglePost() {
   }, [path]);
 
   const handleDelete = async () => {
-    if (user.role === "admin") {
-      try {
-        await axios.delete(`/posts/${post._id}`, {
-          data: { username: user.username },
-        });
-        window.location.replace("/");
-      } catch (err) {}
-    }
+    try {
+      await axios.delete(`/posts/${post._id}`, {
+        data: { username: user.username },
+      });
+      window.location.replace("/");
+    } catch (err) {}
   };
 
   const handleUpdate = async () => {
-    if (user.role === "admin") {
-      try {
-        await axios.put(`/posts/${post._id}`, {
-          username: user.username,
-          title,
-          desc,
-        });
-        setUpdateMode(false);
-      } catch (err) {}
-    }
+    try {
+      await axios.put(`/posts/${post._id}`, {
+        username: user.username,
+        title,
+        desc,
+      });
+      setUpdateMode(false)
+    } catch (err) {}
   };
 
   return (
@@ -68,49 +64,44 @@ export default function SinglePost() {
             {title}
             {post.username === user?.username && (
               <div className="singlePostEdit">
-                {user.role === "admin" && (
-                  <>
-                    <i
-                      className="singlePostIcon far fa-edit"
-                      onClick={() => setUpdateMode(true)}
-                    ></i>
-                    <i
-                      className="singlePostIcon far fa-trash-alt"
-                      onClick={handleDelete}
-                    ></i>
-                  </>
-                )}
+                <i
+                  className="singlePostIcon far fa-edit"
+                  onClick={() => setUpdateMode(true)}
+                ></i>
+                <i
+                  className="singlePostIcon far fa-trash-alt"
+                  onClick={handleDelete}
+                ></i>
               </div>
             )}
           </h1>
         )}
         <div className="singlePostInfo">
-        <span className="singlePostAuthor">
-  Author:
-  <Link to={`/?user=${post.username}`} className="link">
-    <b> {post.username}</b>
-  </Link>
-</span>
-<span className="singlePostDate">
-  {new Date(post.createdAt).toDateString()}
-</span>
-</div>
-{updateMode ? (
-  <textarea
-    className="singlePostDescInput"
-    value={desc}
-    onChange={(e) => setDesc(e.target.value)}
-  />
-) : (
-  <p className="singlePostDesc">{desc}</p>
-)}
-{updateMode && (
-  <button className="singlePostButton" onClick={handleUpdate}>
-    Update
-  </button>
-)}
-</div>
-</div>
-);
+          <span className="singlePostAuthor">
+            Author:
+            <Link to={`/?user=${post.username}`} className="link">
+              <b> {post.username}</b>
+            </Link>
+          </span>
+          <span className="singlePostDate">
+            {new Date(post.createdAt).toDateString()}
+          </span>
+        </div>
+        {updateMode ? (
+          <textarea
+            className="singlePostDescInput"
+            value={desc}
+            onChange={(e) => setDesc(e.target.value)}
+          />
+        ) : (
+          <p className="singlePostDesc">{desc}</p>
+        )}
+        {updateMode && (
+          <button className="singlePostButton" onClick={handleUpdate}>
+            Update
+          </button>
+        )}
+      </div>
+    </div>
+  );
 }
-

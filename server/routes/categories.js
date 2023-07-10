@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const Category = require("../models/Category");
+const Post = require("../models/Post");
 
 router.post("/", async (req, res) => {
   const newCat = new Category(req.body);
@@ -19,5 +20,6 @@ router.get("/", async (req, res) => {
       res.status(500).json(err);
     }
   });
+
 
 module.exports = router;

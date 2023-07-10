@@ -10,7 +10,10 @@ const PostSchema = new mongoose.Schema(
     desc: {
       type: String,
       required: true,
+ 
+
     },
+
     photo: {
       type: String,
       required: false,
@@ -27,4 +30,10 @@ const PostSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Post", PostSchema);
+// module.exports = mongoose.model("Post", PostSchema);
+
+PostSchema.index({ title: "text", desc: "text" });
+
+const Post = mongoose.model("Post", PostSchema);
+
+module.exports = Post;
